@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h1>My Applications</h1><table><tr><th>Job</th><th>Company</th><th>Applied</th><th>Status</th><th>Interviews</th></tr>
+{% for a in apps %}<tr><td>{{ a.job_title }}</td><td>{{ a.company_name }}</td><td>{{ a.application_date }}</td><td><span class="badge">{{ a.status }}</span></td>
+<td>{% for i in interviews[a.application_id] %}{{ i.interview_date }} {{ i.interview_time }} ({{ i.interview_mode }})<br>{% endfor %}</td></tr>
+{% else %}<tr><td colspan="5" class="muted">No applications yet.</td></tr>{% endfor %}</table></div>
+<div class="card"><h2>Offers</h2><table>{% for o in offers %}<tr><td>{{ o.job_title }} — {{ o.company_name }}</td><td>{{ o.salary or '-' }}</td><td>Join: {{ o.joining_date or '-' }}</td><td><span class="badge">{{ o.status }}</span></td>
+<td>{% if o.status == 'Pending' %}<form class="inline" method="post" action="{{ url_for('student.respond', offer_id=o.offer_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+<button class="btn" name="decision" value="Accepted">Accept</button> <button class="btn red" name="decision" value="Declined">Decline</button></form>{% endif %}</td></tr>
+{% else %}<tr><td class="muted">No offers yet.</td></tr>{% endfor %}</table></div>
+<div class="card"><div class="row"><h2 style="margin-right:auto">Notifications</h2><form method="post" action="{{ url_for('student.read_notifications') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn sec">Mark all read</button></form></div>
+{% for n in notes %}<p>{% if not n.is_read %}<b>● </b>{% endif %}{{ n.message }} <span class="muted">{{ n.notification_date }}</span></p>{% else %}<p class="muted">Nothing yet.</p>{% endfor %}</div>
+{% endblock %}

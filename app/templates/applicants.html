@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}<div class="card"><h1>Applicants — {{ job.job_title }}</h1>
+<table><tr><th>Student</th><th>Dept</th><th>CGPA</th><th>Backlogs</th><th>Status</th><th></th></tr>
+{% for a in apps %}<tr><td>{{ a.student_name }}</td><td>{{ a.department }}</td><td>{{ a.cgpa }}</td><td>{{ a.active_backlogs }}</td><td><span class="badge">{{ a.status }}</span></td>
+<td><a href="{{ url_for('company.manage', application_id=a.application_id) }}">Manage</a></td></tr>
+{% else %}<tr><td colspan="6" class="muted">No applicants yet.</td></tr>{% endfor %}</table></div>{% endblock %}

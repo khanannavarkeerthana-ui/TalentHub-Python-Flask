@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% block content %}<div class="card"><h1>Company Sign-up</h1>
+<form method="post"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="grid">
+<div><label>Company name</label><input name="company_name" required></div><div><label>Email</label><input name="email" type="email" required></div>
+<div><label>Password (min 8)</label><input name="password" type="password" required></div><div><label>Industry</label><input name="industry"></div>
+<div><label>Location</label><input name="location"></div></div><p><button class="btn">Create account</button></p></form></div>{% endblock %}

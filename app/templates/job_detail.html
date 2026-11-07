@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h1>{{ job.job_title }}</h1>
+<p class="muted">{{ job.company_name }}{% if job.location %} · {{ job.location }}{% endif %}</p>
+<p>{{ job.description }}</p>
+<table><tr><th>Minimum CGPA</th><td>{{ job.min_cgpa }}</td></tr>
+<tr><th>Max active backlogs</th><td>{{ job.max_backlogs if job.max_backlogs is not none else 'No limit' }}</td></tr>
+<tr><th>Departments</th><td>{{ job.allowed_departments or 'All' }}</td></tr>
+<tr><th>Required skills</th><td>{{ job.required_skills or '-' }}</td></tr>
+<tr><th>Salary</th><td>{{ job.salary or '-' }}</td></tr><tr><th>Deadline</th><td>{{ job.deadline or '-' }}</td></tr>
+{% if job.eligibility_criteria %}<tr><th>Notes</th><td>{{ job.eligibility_criteria }}</td></tr>{% endif %}</table></div>
+{% if cur.role == 'student' %}<div class="card">
+{% if eligibility[0] %}<p><span class="badge">Eligible</span></p>
+<form method="post" action="{{ url_for('student.apply', job_id=job.job_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="btn">Apply now</button></form>
+{% else %}<p><span class="badge" style="background:#fee2e2">Not eligible</span></p><ul>{% for r in eligibility[1] %}<li>{{ r }}</li>{% endfor %}</ul>{% endif %}</div>
+{% elif not cur.role %}<div class="card"><a class="btn" href="{{ url_for('main.login') }}">Log in as a student to apply</a></div>{% endif %}
+{% endblock %}

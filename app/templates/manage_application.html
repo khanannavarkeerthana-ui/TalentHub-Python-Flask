@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h1>{{ app.student_name }} → {{ app.job_title }}</h1>
+<p>{{ app.department }} · CGPA {{ app.cgpa }} · Backlogs {{ app.active_backlogs }} · Skills: {{ app.skills or '-' }}</p>
+<p>Status: <span class="badge">{{ app.status }}</span></p>
+{% if next_statuses %}<form method="post" action="{{ url_for('company.set_status', application_id=app.application_id) }}" class="row"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+{% for s in next_statuses %}<button class="btn {{ 'red' if s=='Rejected' else '' }}" name="status" value="{{ s }}">Mark {{ s }}</button>{% endfor %}</form>{% endif %}</div>
+{% if app.status in ('Shortlisted','Scheduled') %}<div class="card"><h2>Schedule interview</h2>
+<form method="post" action="{{ url_for('company.interview', application_id=app.application_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="grid">
+<div><label>Date</label><input type="date" name="interview_date" required></div><div><label>Time</label><input type="time" name="interview_time" required></div>
+<div><label>Mode</label><select name="interview_mode"><option>Online</option><option>Offline</option></select></div></div><p><button class="btn">Schedule</button></p></form></div>{% endif %}
+{% if interviews %}<div class="card"><h2>Interviews</h2>{% for i in interviews %}<p>{{ i.interview_date }} {{ i.interview_time }} — {{ i.interview_mode }} ({{ i.status }})</p>{% endfor %}</div>{% endif %}
+{% if app.status == 'Selected' %}<div class="card"><h2>Offer</h2>
+{% if offer %}<p>Offer made on {{ offer.offer_date }} — salary {{ offer.salary or '-' }}, joining {{ offer.joining_date or '-' }}. <span class="badge">{{ offer.status }}</span></p>
+{% else %}<form method="post" action="{{ url_for('company.offer', application_id=app.application_id) }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><div class="grid">
+<div><label>Salary</label><input name="salary" type="number" min="0"></div><div><label>Joining date</label><input name="joining_date" type="date"></div></div><p><button class="btn">Create offer</button></p></form>{% endif %}</div>{% endif %}
+{% endblock %}

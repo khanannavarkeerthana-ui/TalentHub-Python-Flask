@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block content %}
+<div class="card"><h1>Job Listings</h1>
+<form method="get" class="row"><input name="q" value="{{ q }}" placeholder="Search title, company or skill" style="flex:1"><button class="btn">Search</button></form></div>
+{% for j in jobs %}<div class="card"><h2><a href="{{ url_for('main.job_detail', job_id=j.job_id) }}">{{ j.job_title }}</a></h2>
+<div class="muted">{{ j.company_name }}{% if j.location %} · {{ j.location }}{% endif %}{% if j.salary %} · ₹{{ '%.0f'|format(j.salary) }}{% endif %}{% if j.deadline %} · Apply by {{ j.deadline }}{% endif %}</div>
+<p>Min CGPA {{ j.min_cgpa }}{% if j.max_backlogs is not none %} · Max backlogs {{ j.max_backlogs }}{% endif %}{% if j.allowed_departments %} · {{ j.allowed_departments }}{% endif %}</p></div>
+{% else %}<div class="card muted">No jobs found.</div>{% endfor %}{% endblock %}

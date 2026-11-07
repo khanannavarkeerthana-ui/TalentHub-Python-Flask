@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% block content %}<div class="card"><div class="row"><h1 style="margin-right:auto">{{ company.company_name }}</h1><a class="btn" href="{{ url_for('company.new_job') }}">Post new job</a></div>
+<table><tr><th>Job</th><th>Deadline</th><th>Applicants</th><th></th></tr>
+{% for j in jobs %}<tr><td>{{ j.job_title }}</td><td>{{ j.deadline or '-' }}</td><td>{{ j.applicants }}</td><td><a href="{{ url_for('company.applicants', job_id=j.job_id) }}">View applicants</a></td></tr>
+{% else %}<tr><td colspan="4" class="muted">No jobs posted yet.</td></tr>{% endfor %}</table></div>{% endblock %}
